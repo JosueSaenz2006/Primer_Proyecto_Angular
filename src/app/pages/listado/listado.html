@@ -1,0 +1,20 @@
+﻿<div>
+  <h2>Listado de Productos</h2>
+  
+  <table border="1">
+    <tr>
+      <th>Código</th>
+      <th>Nombre</th>
+      <th>Stock</th>
+      <th>Acciones</th>
+    </tr>
+    <tr *ngFor="let producto of productos; let i = index">
+      <td>{{ producto.codigo }}</td>
+      <td>{{ producto.nombre }}</td>
+      <td>{{ producto.stock }}</td>
+      <td>
+        <button (click)="editar(i)">Editar</button>
+      </td>
+    </tr>
+  </table>
+</div>
