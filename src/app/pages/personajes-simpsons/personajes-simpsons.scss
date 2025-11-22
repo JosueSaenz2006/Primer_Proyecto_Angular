@@ -1,0 +1,430 @@
+// Variables temáticas de Los Simpsons
+$simpsons-yellow: #ffd90f;
+$simpsons-blue: #6db9ef;
+$simpsons-pink: #ff6eb4;
+$simpsons-sky: #73c2fb;
+$simpsons-green: #7eca9c;
+$dark-bg: #1a1a2e;
+$card-bg: #ffffff;
+$shadow-color: rgba(0, 0, 0, 0.15);
+$hover-shadow: rgba(255, 217, 15, 0.4);
+
+// Mixins
+@mixin glassmorphism {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@mixin card-hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px $hover-shadow,
+              0 0 30px rgba($simpsons-yellow, 0.3);
+}
+
+// Contenedor principal
+.simpsons-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, $simpsons-sky 0%, $simpsons-blue 50%, $simpsons-green 100%);
+  padding: 2rem;
+  position: relative;
+  overflow-x: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(255, 217, 15, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 110, 180, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+// Header
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+
+  .title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: $simpsons-yellow;
+    text-shadow: 
+      4px 4px 0 #000,
+      6px 6px 0 rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 217, 15, 0.6);
+    margin: 0;
+    letter-spacing: 2px;
+    animation: titleBounce 2s ease-in-out infinite;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 1rem 0;
+    font-weight: 600;
+  }
+
+  .header-decoration {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .donut {
+      font-size: 2rem;
+      display: inline-block;
+      animation: rotateTilt 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+
+      &:nth-child(1) {
+        animation-delay: 0s;
+      }
+      &:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      &:nth-child(3) {
+        animation-delay: 1s;
+      }
+    }
+  }
+}
+
+// Grid de personajes
+.characters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  padding: 1rem;
+}
+
+// Tarjeta de personaje
+.character-card {
+  perspective: 1000px;
+  animation: fadeInUp 0.6s ease-out backwards;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  &:hover .card-inner {
+    transform: rotateY(5deg) rotateX(5deg);
+  }
+
+  .card-front {
+    @include glassmorphism;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px $shadow-color;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, $simpsons-yellow, $simpsons-pink, $simpsons-blue);
+      border-radius: 20px;
+      padding: 3px;
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    &:hover {
+      @include card-hover;
+      
+      &::before {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Contenedor de imagen
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+  background: linear-gradient(135deg, $simpsons-yellow 0%, $simpsons-blue 100%);
+
+  .character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+  }
+
+  .character-id {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: $simpsons-yellow;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  &:hover {
+    .character-image {
+      transform: scale(1.1);
+    }
+
+    .image-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+// Contenido de la tarjeta
+.card-content {
+  padding: 1.5rem;
+  background: white;
+
+  .character-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+
+  .character-age {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+  }
+}
+
+// Acciones de la tarjeta
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+
+  .btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+
+    .btn-icon {
+      font-size: 1.1rem;
+      transition: transform 0.3s;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    &:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .btn-edit {
+    background: linear-gradient(135deg, $simpsons-blue, darken($simpsons-blue, 10%));
+    color: white;
+
+    &:hover {
+      background: linear-gradient(135deg, darken($simpsons-blue, 5%), darken($simpsons-blue, 15%));
+      box-shadow: 0 6px 20px rgba(109, 185, 239, 0.4);
+      transform: translateY(-2px);
+
+      .btn-icon {
+        transform: rotate(15deg);
+      }
+    }
+  }
+
+  .btn-delete {
+    background: linear-gradient(135deg, #ff6b6b, #c92a2a);
+    color: white;
+
+    &:hover {
+      background: linear-gradient(135deg, #ff5252, #b71c1c);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+      transform: translateY(-2px);
+
+      .btn-icon {
+        transform: rotate(15deg);
+      }
+    }
+  }
+}
+
+// Loading
+.loading {
+  text-align: center;
+  padding: 4rem;
+  color: white;
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(255, 255, 255, 0.3);
+    border-top-color: $simpsons-yellow;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Animaciones
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleBounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+@keyframes rotateTilt {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-15deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(15deg) scale(1.1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .simpsons-container {
+    padding: 1rem;
+  }
+
+  .header {
+    .title {
+      font-size: 2.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+    }
+  }
+
+  .characters-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .image-container {
+    height: 280px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .characters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header .title {
+    font-size: 2rem;
+  }
+}
