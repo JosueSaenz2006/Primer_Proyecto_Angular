@@ -1,47 +1,69 @@
 <div class="simpsons-container">
   <header class="header">
-    <h1 class="title">Los Simpsons</h1>
-    <p class="subtitle">Personajes de Springfield</p>
-    <div class="header-decoration">
-      <span class="donut">🍩</span>
-      <span class="donut">🍩</span>
-      <span class="donut">🍩</span>
-    </div>
+    <h1>Personajes de Los Simpsons</h1>
+    <p>Selecciona un personaje para ver más detalles</p>
   </header>
 
-  <div class="characters-grid">
-    <div class="character-card" *ngFor="let personaje of personajes; let i = index">
-      <div class="card-inner">
-        <div class="card-front">
-          <div class="image-container">
-            <img [src]="'https://cdn.thesimpsonsapi.com/500' + personaje.portrait_path" 
-                 [alt]="personaje.name"
-                 class="character-image">
-            <div class="image-overlay">
-              <span class="character-id">#{{ personaje.id }}</span>
-            </div>
+  <div class="main-layout">
+    <!-- Columna Izquierda: Lista -->
+    <div class="lista-section">
+      <div class="character-list">
+        @for (p of personajes; track p.id) {
+          <div class="character-item" 
+               [class.selected]="p === personajeSeleccionado">
+            <span class="name">{{ p.name }}</span>
+            <button class="btn-details" (click)="seleccionarPersonaje(p)">Ver detalles</button>
           </div>
-          <div class="card-content">
-            <h3 class="character-name">{{ personaje.name }}</h3>
-            <p class="character-age" *ngIf="personaje.age">{{ personaje.age }} años</p>
-            <div class="card-actions">
-              <button class="btn btn-edit" (click)="editar(i)">
-                <span class="btn-icon">✏️</span>
-                Editar
-              </button>
-              <button class="btn btn-delete" (click)="eliminar(i)">
-                <span class="btn-icon">🗑️</span>
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
+        }
       </div>
     </div>
-  </div>
 
-  <div class="loading" *ngIf="personajes.length === 0">
-    <div class="spinner"></div>
-    <p>Cargando personajes...</p>
+    <!-- Columna Derecha: Detalles -->
+    <div class="detalles-section">
+      @if (personajeSeleccionado) {
+        <div class="details-card">
+          <h2>{{ personajeSeleccionado.name }}</h2>
+          <div class="info-grid">
+            <p><strong>ID:</strong> {{ personajeSeleccionado.id }}</p>
+            <p><strong>Género:</strong> {{ personajeSeleccionado.gender || 'No especificado' }}</p>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn-action" (click)="verLocacion()"> Ver Locación</button>
+            <button class="btn-action" (click)="verEpisodios()"> Ver Episodios</button>
+          </div>
+
+          <!-- Info Locación -->
+          @if (locacionSeleccionada) {
+            <div class="extra-info location-box">
+              <h3>Locación Sugerida</h3>
+              <p>{{ locacionSeleccionada.name }}</p>
+            </div>
+          }
+
+          <!-- Info Episodios -->
+          @if (episodiosRelacionados.length > 0) {
+            <div class="extra-info episodes-box">
+              <h3>Episodios Relacionados</h3>
+              <ul>
+                @for (ep of episodiosRelacionados; track ep.id) {
+                  <li>
+                    <strong>{{ ep.name }}</strong> 
+                    <span class="season-info">(Temp {{ ep.season }} - Ep {{ ep.episode }})</span>
+                    @if (ep.description) {
+                      <p class="desc">{{ ep.description }}</p>
+                    }
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p>Selecciona un personaje de la lista</p>
+        </div>
+      }
+    </div>
   </div>
 </div>
