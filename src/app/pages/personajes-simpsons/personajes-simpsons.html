@@ -68,28 +68,36 @@
         </div>
 
         <!-- Info Locación -->
-        @if (locacionSeleccionada) {
+        @if (locacionSeleccionada) 
+        {
+
           <div class="extra-info location-box">
             <h3>Locación Sugerida</h3>
             <p>{{ locacionSeleccionada.name }}</p>
+            <img *ngIf="locacionSeleccionada.image_path" src="https://cdn.thesimpsonsapi.com/500{{locacionSeleccionada.image_path}}" alt="{{locacionSeleccionada.name}}">
           </div>
         }
 
         <!-- Info Episodios -->
-        @if (episodiosRelacionados.length > 0) {
+        @if (episodiosRelacionados.length > 0) 
+        {
           <div class="extra-info episodes-box">
             <h3>Episodios Relacionados</h3>
             <ul>
-              @for (ep of episodiosRelacionados; track ep.id) {
+              @for (ep of episodiosRelacionados; track ep.id) 
+              {
                 <li>
                   <strong>{{ ep.name }}</strong> 
                   <span class="season-info">(Temp {{ ep.season }} - Ep {{ ep.episode }})</span>
-                  @if (ep.description) {
+                  @if (ep.description) 
+                  {
                     <p class="desc">{{ ep.description }}</p>
                   }
                 </li>
+
               }
             </ul>
+
           </div>
         }
       </div>

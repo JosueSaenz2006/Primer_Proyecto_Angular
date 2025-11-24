@@ -28,6 +28,7 @@ export interface Location {
   id: number;
   name: string;
   normalized_name?: string;
+  image_path?: string;
 }
 
 // Interfaces para las respuestas paginadas
