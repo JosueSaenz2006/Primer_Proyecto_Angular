@@ -11,7 +11,7 @@ export interface Character {
   gender?: string;
   age?: number;
   occupation?: string;
-  portrait_path?: string;
+  portrait_path?: string; // 👈 ruta de la imagen
   status?: string;
 }
 
@@ -49,23 +49,26 @@ export class SimpsonsApiService {
 
   // Obtener todos los personajes
   getCharacters(): Observable<Character[]> {
-    return this.http.get<PaginatedResponse<Character>>(`${this.baseUrl}/characters`)
+    return this.http
+      .get<PaginatedResponse<Character>>(`${this.baseUrl}/characters`)
       .pipe(map(response => response.results));
   }
 
   // Obtener todos los episodios
   getEpisodes(): Observable<Episode[]> {
-    return this.http.get<PaginatedResponse<Episode>>(`${this.baseUrl}/episodes`)
+    return this.http
+      .get<PaginatedResponse<Episode>>(`${this.baseUrl}/episodes`)
       .pipe(map(response => response.results));
   }
 
   // Obtener todas las locaciones
   getLocations(): Observable<Location[]> {
-    return this.http.get<PaginatedResponse<Location>>(`${this.baseUrl}/locations`)
+    return this.http
+      .get<PaginatedResponse<Location>>(`${this.baseUrl}/locations`)
       .pipe(map(response => response.results));
   }
   
-  // Método opcional por si necesitamos buscar un personaje específico por ID
+  // Buscar un personaje específico por ID
   getCharacterById(id: number): Observable<Character> {
     return this.http.get<Character>(`${this.baseUrl}/characters/${id}`);
   }
